@@ -1,0 +1,18 @@
+[general]
+host = "::"
+port = 443
+root = "/var/www/virtuafake"
+
+#### Logging
+log-level = "error"
+
+#### Cache Control headers
+cache-control-headers = true
+
+#### HTTP/2 + TLS
+http2 = true
+http2-tls-cert = "/var/www/.cart/virtuafake.cert"
+http2-tls-key = "/var/www/.cart/virtuafake.key"
+
+#### Worker threads
+threads-multiplier = 1
