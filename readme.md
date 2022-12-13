@@ -1,4 +1,4 @@
-# VirtuaFake-FB (WIP)
+# VirtuaFake-FE (WIP)
 VirtuaFake项目的前端代码
 
 - [virtuafake-web](./virtuafake-web/) 前端网页
