@@ -11,9 +11,9 @@ import DanmakuQuery from './pages/query/DanmakuQuery.vue'
 import LiverRoomStat from './pages/query/LiverRoomStat.vue'
 import QueryVue from './pages/query/Query.vue'
 // dev
-Api.setBaseUrl('https://114.115.163.153:7777')
+Api.setBaseUrl('http://localhost:7777')
 // product
-// Api.setBaseUrl('http://api.vrp.4t145.com:7773')
+// Api.setBaseUrl('https://114.115.163.153:7777')
 
 loadFonts()
 
