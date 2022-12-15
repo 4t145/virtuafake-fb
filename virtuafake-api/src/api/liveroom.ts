@@ -1,5 +1,5 @@
 import { Pagination, Paged, url } from ".";
-import { DanmakuEvent } from "bilive-danmaku-json";
+import { DanmakuEvent, GiftEvent, SuperChatEvent } from "bilive-danmaku-json";
 import { RustType, Decoder } from "bincode-ts";
 import { config, VecU32 } from "../bincode";
 export namespace Liveroom {
@@ -119,6 +119,63 @@ export namespace Liveroom {
       ).arrayBuffer();
       const decoder = new Decoder(config);
       return decoder.load(buffer).decodeAs(VecU32);
+    };
+  }
+
+  export namespace Superchat {
+    const path = ["liveroom", "superchat"];
+    const method = "POST";
+    export type Req = {
+      pagination: Pagination;
+      roomid: number;
+      uid?: number;
+      time_from: number;
+      time_to: number;
+    };
+    export type Ok = Paged<SuperChatEvent>;
+
+    export type Fail = string;
+    export const send = async (req: Req): Promise<Ok> => {
+      return await (
+        await fetch(url(path), {
+          method,
+          mode: "cors",
+          credentials: "omit",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(req),
+        })
+      ).json();
+    };
+  }
+
+  export namespace Gift {
+    const path = ["liveroom", "gift"];
+    const method = "POST";
+    export type Req = {
+      pagination: Pagination;
+      roomid: number;
+      uid?: number;
+      paid: boolean
+      time_from: number;
+      time_to: number;
+    };
+    export type Ok = Paged<GiftEvent>;
+
+    export type Fail = string;
+    export const send = async (req: Req): Promise<Ok> => {
+      return await (
+        await fetch(url(path), {
+          method,
+          mode: "cors",
+          credentials: "omit",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(req),
+        })
+      ).json();
     };
   }
 }

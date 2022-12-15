@@ -13,6 +13,6 @@ export const QueryApplicationList: Array<QueryApplication> = [
     {
         name: '弹幕查询',
         icon: 'mdi-text',
-        link: 'danmaku-query'
+        link: 'danmaku'
     },
 ]

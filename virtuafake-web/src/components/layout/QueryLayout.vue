@@ -1,5 +1,5 @@
 <template>
-  <v-container class="d-flex flex-column h-100">
+  <v-container class="d-flex flex-column h-screen">
     <div class="pa-4 d-flex flex-row align-content-center align-center">
       <RoomPicker
         v-model:roomid="roomid"
@@ -9,7 +9,7 @@
       <v-dialog v-model="showDialog" persistent max-width="768px">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" append-icon="mdi-filter" variant="flat">
-            {{$props.functionalButtonText ?? '更多'}}
+            {{ $props.functionalButtonText ?? "更多" }}
           </v-btn>
           <v-btn
             color="primary"
@@ -40,24 +40,28 @@
       </v-dialog>
     </div>
 
-    <v-card class="h-100">
+    <v-card class="flex-grow-1 flex-shrink-1">
       <slot name="content"></slot>
     </v-card>
   </v-container>
 </template>
-
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import RoomPicker from "../input/RoomPicker.vue";
 
 export type Props = {
   functionalButtonText?: string;
+  roomid: number;
 };
 export type Emits = {
-  (event: "query"): boolean;
+  (event: "query"): void;
+  (event: "update:roomid", roomid: number): void;
 };
 const emit = defineEmits<Emits>();
-defineProps<Props>();
+const props = defineProps<Props>();
 const showDialog = ref(false);
-const roomid = ref(851181);
+const roomid = ref(props.roomid);
+watch(roomid, (newRoomid) => {
+  emit("update:roomid", newRoomid);
+});
 </script>

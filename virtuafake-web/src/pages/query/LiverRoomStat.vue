@@ -19,7 +19,7 @@ function query() {}
 </script>
 
 <template>
-  <QueryLayout @query="query">
+  <QueryLayout v-model:roomid="roomid" @query="query">
     <template #form>
         <LiverRoomStatForm v-model:form="form"></LiverRoomStatForm>
     </template>

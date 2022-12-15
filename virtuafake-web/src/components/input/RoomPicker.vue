@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Model } from "virtuafake-api";
-import { watch, ref, computed } from "vue";
+import { watch, ref, computed, onMounted } from "vue";
 import liverListService from "../../data-service/liver-list";
 export interface Props {
   roomid: number;
@@ -17,15 +17,10 @@ type LiverOption = {
   avatar: string;
   color: string;
 };
-const items = liverListService.liverList.map((liver) => {
-  return <LiverOption>{
-    value: liver.uid,
-  };
-});
+let items: LiverOption[] = [];
 watch(
   roomid,
   (newRoomId) => {
-    console.log(newRoomId);
     emit("update:roomid", newRoomId);
   },
   {
@@ -33,14 +28,15 @@ watch(
   }
 );
 const loading = ref(false);
-const liverList = ref(liverListService.liverList);
-watch(
-  () => liverListService.syncing,
-  (syncing) => {
-    loading.value = syncing;
-    liverList.value = liverListService.liverList;
-  }
-);
+const liverList = ref<Model.Liver[]>();
+onMounted(async () => {
+  liverList.value = await liverListService.liverList;
+  items = liverList.value.map((liver) => {
+    return <LiverOption>{
+      value: liver.uid,
+    };
+  });
+});
 </script>
 <template>
   <v-autocomplete
@@ -55,7 +51,7 @@ watch(
     v-bind="$attrs"
   >
     <template v-slot:item="{ item, index, props }">
-      <v-list-item v-bind="props">
+      <v-list-item v-bind="props" v-if="liverList">
         <v-list-item-subtitle
           v-text="liverList[index].roomid"
         ></v-list-item-subtitle>

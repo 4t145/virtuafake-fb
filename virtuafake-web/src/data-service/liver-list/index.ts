@@ -1,17 +1,13 @@
 import * as LsCache from "../ls-cache";
 import { Model, Api } from "virtuafake-api";
 class LiverListService {
-  private _liverList: Model.Liver[] = [];
+  private _liverList: Promise<Model.Liver[]> = Promise.reject();
   private _syncing: boolean = false;
   get syncing(): boolean {
     return this._syncing;
   }
-  get liverList(): Model.Liver[] {
-    if (this._syncing) {
-      return [];
-    } else {
-      return this._liverList;
-    }
+  get liverList(): Promise<Model.Liver[]> {
+    return this._liverList
   }
   /**
    * 从本地储存加载
@@ -20,7 +16,7 @@ class LiverListService {
     const srv = new LiverListService();
     const local = LsCache.get(LsCache.Key.LiverList);
     if (local) {
-      srv._liverList = local;
+      srv._liverList = Promise.resolve(local);
     }
     return srv;
   }
@@ -31,13 +27,12 @@ class LiverListService {
     return srv;
   }
 
-  async sync(): Promise<void> {
+  sync(): void {
     this._syncing = true;
-
-    await Api.Liver.Feedlist.Liver.send()
+    this._liverList = Api.Liver.Feedlist.Liver.send()
       .then((liverList) => {
-        this._liverList = liverList;
         LsCache.set(LsCache.Key.LiverList, liverList);
+        return liverList;
       })
       .finally(() => (this._syncing = false));
   }
